@@ -1,0 +1,2 @@
+python-whois==0.7.2
+validators==0.15.0
