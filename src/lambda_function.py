@@ -6,6 +6,7 @@ Lambda handler to incoming whois requests for the Just Report It plugin
 
 from http import HTTPStatus
 import validators
+from tldextract import extract
 from whois import whois
 from response import HttpResponse
 
@@ -22,7 +23,7 @@ def validate_domain(domain):
     """
     Validates incoming domain and filters for ip-based 'domains'
     """
-    return validators.domain(domain) and len(domain.split(".")) == 2
+    return validators.domain(extract(domain).domain + "." + extract(domain).suffix)
 
 def email(domain):
     """
