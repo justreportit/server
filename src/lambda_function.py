@@ -7,9 +7,11 @@ Lambda handler to incoming whois requests for the Just Report It plugin
 from http import HTTPStatus
 import validators
 from tldextract import extract
+from lambdawarmer import warmer
 from whois import whois
 from response import HttpResponse
 
+@warmer(send_metric=True)
 def lambda_handler(event, context):
     """
     Returns completed request with response code (used by the lambda handler)
