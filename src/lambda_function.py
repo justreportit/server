@@ -44,3 +44,7 @@ def email(domain):
             return HttpResponse.failure(status=HTTPStatus.BAD_REQUEST, error="TLD is not yet supported")
     return HttpResponse.failure(status=HTTPStatus.BAD_REQUEST,
                                 error="Domain (%s) is invalid or not supported." % domain)
+
+if __name__ == "__main__":
+    print(email("test.com"))
+    print(validate_domain("test.com"))
