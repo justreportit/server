@@ -2,3 +2,4 @@ python-whois==0.8.0
 validators==0.21.0
 tldextract==3.1.0
 lambda-warmer-py==0.6.0
+urllib3>=2.2.2 # not directly required, pinned by Snyk to avoid a vulnerability
