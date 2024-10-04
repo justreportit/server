@@ -1,4 +1,4 @@
-python-whois==0.8.0
+python-whois==0.9.4
 validators==0.21.0
 tldextract==3.1.0
 lambda-warmer-py==0.6.0
