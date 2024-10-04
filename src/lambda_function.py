@@ -27,23 +27,31 @@ def validate_domain(domain):
     """
     return validators.domain(extract(domain).domain + "." + extract(domain).suffix)
 
+
 def email(domain):
     """
     Finds the relevant abuse email address for the domain
     """
     if validate_domain(domain):
         try:
-            emails = whois(domain).emails
-            if isinstance(emails, list):
-                for email in emails:
-                    if "abuse" in email:
-                        return HttpResponse.success(status=HTTPStatus.OK, email=email)
-            else:
-                return HttpResponse.failure(status=HTTPStatus.BAD_REQUEST, error="WHOIS lookup has failed")
-        except:
-            return HttpResponse.failure(status=HTTPStatus.BAD_REQUEST, error="TLD is not yet supported")
+            whois_result = whois(domain)
+            if whois_result.emails is None:
+                return HttpResponse.failure(status=HTTPStatus.BAD_REQUEST,
+                                            error="No email addresses found in WHOIS lookup")
+
+            emails = whois_result.emails if isinstance(whois_result.emails, list) else [whois_result.emails]
+
+            for email in emails:
+                if "abuse" in email.lower():
+                    return HttpResponse.success(status=HTTPStatus.OK, email=email)
+
+            # If no abuse email found, return the first email
+            return HttpResponse.success(status=HTTPStatus.OK, email=emails[0])
+        except Exception as e:
+            return HttpResponse.failure(status=HTTPStatus.BAD_REQUEST, error=f"WHOIS lookup failed: {str(e)}")
     return HttpResponse.failure(status=HTTPStatus.BAD_REQUEST,
-                                error="Domain (%s) is invalid or not supported." % domain)
+                                error=f"Domain ({domain}) is invalid or not supported.")
+
 
 if __name__ == "__main__":
     print(email("test.com"))
